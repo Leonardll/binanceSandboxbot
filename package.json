@@ -1,0 +1,20 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "my bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@binance/connector": "^1.5.0",
+    "cryptocompare": "^1.0.0",
+    "dotenv": "^10.0.0",
+    "node-binance-api": "^0.13.1",
+    "node-fetch": "^2.6.1",
+    "yarn": "^1.22.17"
+  },
+  "type": "commonjs"
+}
