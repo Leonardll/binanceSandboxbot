@@ -1,35 +1,69 @@
-const Binance = require("node-binance-api");
-const binance = new Binance().options({
-  APIKEY : 'uZ7blp8dQHmn1WQjJNeSo1US7dywAkcnmjmvEZlyTchKfS1PyfFQ2hGQ9NbU0jdq',
-  APISECRET : 'dDlzGlDeFqseBZ9LgH9ZqcTqZcrPKEiZOFeOe8Se8fMymd8XuPTpxaEu5pkQd1Eq',
-  useServerTime: true,
-  test:true
-});
+const {Spot} = require('@binance/connector')
+require('dotenv').config()
+const fetch = require("node-fetch").default;
+global.fetch = fetch;
+//const axios = require('axios');
+//Binance API Key
+const apiKey = process.env.API_KEY
+//Binance secret
+const apiSecret = process.env.API_SECRET
+//Binance Test nest 
+const client = new Spot(apiKey, apiSecret, { baseURL: 'https://testnet.binance.vision'})
+
 
 
 // const restClient = new GeminiAPI({key,secret, sandbox:true});
 
 module.exports = {
-    marketBuy: function marketBuy (symbol) {
-        return restClient.newOrder({amount:1,
-          price:60000,
-          side:"buy",
-          symbol:symbol,
-          options:["immediate-or-cancel"]})
-      },
+    marketBuy: function marketBuy(symbol) {
+     client.newOrder(symbol, 'BUY', 'LIMIT', {
+        price: '350',
+        quantity: 1,
+        timeInForce: 'GTC'
+     })
+     .then(response => client.logger.log(response.data))
+     .catch(error => client.logger.error(error))
+    },
 
     marketSell: function marketSell (symbol) {
-        return restClient.newOrder({amount:1,
-          price:59700,
-          side:"sell",
-          symbol:symbol,
-          options:["immediate-or-cancel"]})
+         client.newOrder(symbol, 'SELL', 'LIMIT', {
+          price: '350',
+          quantity: 1,
+          timeInForce: 'GTC'
+       })
+       .then(response => client.logger.log(response.data))
+       .catch(error => client.logger.error(error))
       },
     symbolPrice: function (symbol) {
-        return binance.prices(symbol, (error, ticker) => {
-          console.info("Price of:", ticker);
-          console.log(error);
-        });
-    }      
+      
+      return client.tickerPrice(symbol)
+      .then(response => client.logger.log(response.data.price))
+      .catch(error => client.logger.error(error))
+      
+    },
+    cancelOrder: function (symbol, id){
+      client.cancelOrder(symbol, {
+          orderId: id
+         }).then(response => client.logger.log(response.data))
+           .catch(error => client.logger.error(error))
+    },
+    allTrades: function (symbol) {
+      client.myTrades(symbol)
+      .then(response => client.logger.log(response.data))
+      .catch(error => client.logger.error(error))
+    },
+    
+    allOpenOrders: function (symbol) {
+      client.cancelOpenOrders(symbol, {
+        recvWindow: 5000
+      }).then(response => client.logger.log(response.data))
+        .catch(error => client.logger.error(error))
+    },
+
+    accountBalance: function  ()  {
+      client.account()
+      .then(response => client.logger.log(response.data))
+      .catch(error => client.logger.error(error))
+    },
       
 }

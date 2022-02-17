@@ -1,18 +1,100 @@
-const {Spot} = require('@binance/connector')
-require('dotenv').config()
-const apiKey = process.env.API_KEY
-const apiSecret = process.env.API_SECRET
+const fetch = require("node-fetch").default;
+global.fetch = fetch;
+
+const exchange = require("./exchange.js") 
+ 
+const movingAverage = require("./indicators/movingAverage.js")
+
+movingAverage.hourlyMovingAverage("BTC","USD",150, function(result) {
+  console.log("MA HRS: ", result)
+})
+movingAverage.dailyMovingAverage("BTC","USD",200, function(result2) {
+  console.log("MA Day: ", result2)
+})
+movingAverage.minuteMovingAverage("BTC","USD",200, function(result3) {
+  console.log("MA min: ", result3)
+})
+
+
+var strategy =  function() {
+  console.log('       ')
+  console.log('=================')
+  console.log("Excuting Strategy");
+  movingAverage.hourlyMovingAverage("BTC","USD",150,  function(result) {
+    //const price = movingAverage.tickerPrice('BTC','USD')
+    async function getPrice() {
+      const price = await movingAverage.tickerPrice('BTC','USD');
+      console.log('Price', price);
+    }
+    getPrice();
+    //console.log('Price', price);
+    //const price = movingAverage.tickerPrice('BTC','USD')
+
+ //async () => { return await movingAverage.tickerPrice('BTC','USD')}
+//     const getPrice = async () => {
+//      movingAverage.tickerPrice('BTC','USD')
+//       return Promise.all()
+//     }
+//     getPrice().then(resp => console.log(resp))
+//               .catch(error => console.log(error)) 
+    console.log("MA HRS: ", result); 
+    //console.log('Price', price);  
+    setTimeout(strategy, 1000)
+  
+  //.catch(error => console.log(error));
+  
+ 
+    
+  })
+ 
+  
+}
+
+strategy()
+
+//exchange.marketBuy('BNBUSDT')
+//exchange.cancelOrder('BNBUSDT', 7216)
+//exchange.allTrades('BNBUSDT')
+//exchange.allOpenOrders('BNBUSDT')
+//exchange.accountBalance()
+//exchange.marketSell('BNBUSDT')
+//console.log(tulind.indicators.sma)
 
 
 
-const client = new Spot(apiKey, apiSecret, { baseURL: 'https://testnet.binance.vision'})
-
-client.avgPrice('BTCUSDT').then(response => client.logger.log(response.data))
+//client.avgPrice('BTCUSDT').then(response => client.logger.log(response.data))
 //client.exchangeInfo().then(response => client.logger.log(response.data))
 // client.exchangeInfo({ symbol: 'btcusdt' }).then(response => client.logger.log(response.data))
 // client.exchangeInfo({ symbols: ['btcusdt', 'BNBUSDT'] }).then(response => client.logger.log(response.data))
 
-client.account().then(response => client.logger.log(response.data))
+//client.account().then(response => client.logger.log(response.data))
+
+// client.cancelOrder('BNBUSDT', {
+//   orderId: 6461611
+// }).then(response => client.logger.log(response.data))
+//   .catch(error => client.logger.error(error))
+
+// client.ticker24hr('ETHUSDT').then(response => client.logger.log("ETH Price",response.data))
+// client.trades('BTCUSDT', { limit: 5 }).then(response => client.logger.log(response.data))
+//   .catch(error => client.logger.error(error))
+// setInterval(() => {
+//   console.log("===========")
+//   client.bookTicker('BTCUSDT').then(response =>  client.logger.log("BTCUSDT price",response.data)) 
+// }, 2000);
+
+
+// client.historicalTrades('BTCUSDT', { limit: 10 }).then(response => client.logger.log("BTC Historic",response.data))
+//   .catch(error => client.logger.error(error.message))
+
+//   client.myTrades('ALL').then(response => client.logger.log(response.data))
+//   .catch(error => client.logger.error(error))
+
+// client.newOrder('BNBUSDT', 'BUY', 'LIMIT', {
+//   price: '350',
+//   quantity: 1,
+//   timeInForce: 'GTC'
+// }).then(response => client.logger.log(response.data))
+//   .catch(error => client.logger.error(error))
 // client.tickerPrice().then(response => client.logger.log(response.data))
 // client.ticker24hr().then(response => client.logger.log(response.data))
 
