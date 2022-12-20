@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Leonardll <lonardlator@yahoo.fr>",
   "license": "ISC",
   "dependencies": {
     "@binance/connector": "^1.5.0",
@@ -19,5 +19,6 @@
     "tulind": "^0.8.20",
     "yarn": "^1.22.17"
   },
-  "type": "commonjs"
+  "type": "commonjs",
+  "repository": "https://github.com/Leonardll/binanceSandboxbot.git"
 }
